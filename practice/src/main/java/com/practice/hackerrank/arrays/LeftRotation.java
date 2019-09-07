@@ -12,15 +12,18 @@ import java.util.Arrays;
 public class LeftRotation {
 
 	/**
-	 * @param n
 	 * @param d
 	 * @param a
 	 * @return
 	 */
-	static int[] rotateLeft(int n, int d, int[] a) {
+	static int[] rotateLeft(int d, int[] a) {
 
-		if (n > 0 && d >= 0 && a != null && a.length == n) {
+		if (d >= 0 && a != null) {
 
+			int n = a.length;
+			if (n == 0) {
+				return a;
+			}
 			d = d % n;
 			int[] arr = new int[n];
 			for (int i = 0; i < n; i++) {
@@ -37,10 +40,9 @@ public class LeftRotation {
 	 */
 	public static void main(String[] args) {
 
-		int n = 5;
 		int d = 4;
 		int[] a = { 1, 2, 3, 4, 5 };
-		System.out.print(Arrays.toString(rotateLeft(n, d, a)));
+		System.out.print(Arrays.toString(rotateLeft(d, a)));
 	}
 
 }
