@@ -40,8 +40,7 @@ public class LeftRotation {
 		int n = 5;
 		int d = 4;
 		int[] a = { 1, 2, 3, 4, 5 };
-		int[] array = rotateLeft(n, d, a);
-		System.out.print(Arrays.toString(array));
+		System.out.print(Arrays.toString(rotateLeft(n, d, a)));
 	}
 
 }
