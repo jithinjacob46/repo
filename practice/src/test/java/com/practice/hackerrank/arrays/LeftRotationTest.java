@@ -3,8 +3,7 @@
  */
 package com.practice.hackerrank.arrays;
 
-import static org.junit.Assert.fail;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -15,7 +14,14 @@ public class LeftRotationTest {
 
 	@Test
 	public void test() {
-		fail("Not yet implemented");
+
+		int n = 5;
+		int d = 4;
+		int[] a = { 1, 2, 3, 4, 5 };
+		int[] array = LeftRotation.rotateLeft(n, d, a);
+		int[] b = { 5, 1, 2, 3, 4 };
+		Assert.assertArrayEquals(b, array);
+
 	}
 
 }

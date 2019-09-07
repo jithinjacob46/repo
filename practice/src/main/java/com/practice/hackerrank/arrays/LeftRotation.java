@@ -17,7 +17,7 @@ public class LeftRotation {
 	 * @param a
 	 * @return
 	 */
-	private static int[] rotateLeft(int n, int d, int[] a) {
+	static int[] rotateLeft(int n, int d, int[] a) {
 
 		if (n > 0 && d >= 0 && a != null && a.length == n) {
 
