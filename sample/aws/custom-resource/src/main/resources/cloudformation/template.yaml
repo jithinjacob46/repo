@@ -5,11 +5,15 @@ Parameters:
   BucketName:
     Type: String
     Description: Enter name of S3 bucket where Lambda jar file is uploaded.
+  Input:
+    Type: String
+    Description: Enter input string
+    Default: 'QWERTYuiop'
 
 Mappings:
   Constants:
     InstanceValues:
-      ArtifactName: custom-resource-0.0.4-SNAPSHOT.jar
+      ArtifactName: custom-resource-0.0.5-SNAPSHOT.jar
 
 Resources:
   LambdaExecutionPolicy:
@@ -70,7 +74,7 @@ Resources:
       ServiceToken: !GetAtt 
         - CustomResourceLambda
         - Arn
-      Input: 'QWERTYuiop'
+      Input: !Ref Input
 
 Outputs: 
   CustomResourceValue: 

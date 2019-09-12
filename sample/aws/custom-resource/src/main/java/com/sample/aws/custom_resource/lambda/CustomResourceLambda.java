@@ -49,8 +49,7 @@ public class CustomResourceLambda implements RequestHandler<Map<String, Object>,
 					String inputText = (String) resourceProperties.get("Input");
 					logger.log("Input " + inputText);
 
-					String outputText = inputText.chars().map(e -> switchCase(e)).mapToObj(e -> (char) e)
-							.map(c -> c.toString()).collect(Collectors.joining());
+					String outputText = inputText.chars().mapToObj(e -> switchCase(e)).collect(Collectors.joining());
 					if (requestType.equalsIgnoreCase("Create")) {
 						logger.log("CREATE!");
 						// Put your custom create logic here
@@ -65,9 +64,6 @@ public class CustomResourceLambda implements RequestHandler<Map<String, Object>,
 						sendResponse(input, context, "SUCCESS", responseData);
 					} else if (requestType.equalsIgnoreCase("Delete")) {
 						logger.log("DELETE!");
-						// Put your custom delete logic here
-						responseData.put("Output", outputText);
-						responseData.put("Message", "Resource deletion successful!");
 						sendResponse(input, context, "SUCCESS", responseData);
 					} else {
 						logger.log("FAILURE!");
@@ -75,13 +71,18 @@ public class CustomResourceLambda implements RequestHandler<Map<String, Object>,
 					}
 				}
 
-				private int switchCase(int e) {
+				/**
+				 * @param e
+				 * @return
+				 */
+				private String switchCase(int e) {
 					if (e >= 65 && e <= 90) {
 						e += 32;
 					} else if (e >= 97 && e <= 122) {
 						e -= 32;
 					}
-					return e;
+					Character ch = (char) e;
+					return ch.toString();
 				}
 			};
 			Future<?> f = service.submit(r);
