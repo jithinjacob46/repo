@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 
@@ -38,38 +39,49 @@ public class CustomResourceLambda implements RequestHandler<Map<String, Object>,
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(10000);
+						Thread.sleep(1000);
 					} catch (final InterruptedException e) {
 						// empty block
 					}
 
 					final Map<String, Object> resourceProperties = (Map<String, Object>) input
 							.get("ResourceProperties");
-					String clearText = (String) resourceProperties.get("ClearText");
-					logger.log("clearText " + clearText);
+					String inputText = (String) resourceProperties.get("Input");
+					logger.log("Input " + inputText);
 
+					String outputText = inputText.chars().map(e -> switchCase(e)).mapToObj(e -> (char) e)
+							.map(c -> c.toString()).collect(Collectors.joining());
 					if (requestType.equalsIgnoreCase("Create")) {
 						logger.log("CREATE!");
 						// Put your custom create logic here
-						responseData.put("CipherText", "CipherText");
+						responseData.put("Output", outputText);
 						responseData.put("Message", "Resource creation successful!");
 						sendResponse(input, context, "SUCCESS", responseData);
 					} else if (requestType.equalsIgnoreCase("Update")) {
 						logger.log("UDPATE!");
 						// Put your custom update logic here
-						responseData.put("CipherText", "CipherText");
+						responseData.put("Output", outputText);
 						responseData.put("Message", "Resource update successful!");
 						sendResponse(input, context, "SUCCESS", responseData);
 					} else if (requestType.equalsIgnoreCase("Delete")) {
 						logger.log("DELETE!");
 						// Put your custom delete logic here
-						responseData.put("CipherText", "CipherText");
+						responseData.put("Output", outputText);
 						responseData.put("Message", "Resource deletion successful!");
 						sendResponse(input, context, "SUCCESS", responseData);
 					} else {
 						logger.log("FAILURE!");
 						sendResponse(input, context, "FAILURE", responseData);
 					}
+				}
+
+				private int switchCase(int e) {
+					if (e >= 65 && e <= 90) {
+						e += 32;
+					} else if (e >= 97 && e <= 122) {
+						e -= 32;
+					}
+					return e;
 				}
 			};
 			Future<?> f = service.submit(r);

@@ -9,7 +9,7 @@ Parameters:
 Mappings:
   Constants:
     InstanceValues:
-      ArtifactName: custom-resource-0.0.3-SNAPSHOT.jar
+      ArtifactName: custom-resource-0.0.4-SNAPSHOT.jar
 
 Resources:
   LambdaExecutionPolicy:
@@ -57,6 +57,9 @@ Resources:
           - Constants
           - InstanceValues
           - ArtifactName
+      Environment:
+        Variables:
+          env: dev
       Runtime: java8
       Timeout: 60
 
@@ -67,11 +70,11 @@ Resources:
       ServiceToken: !GetAtt 
         - CustomResourceLambda
         - Arn
-      ClearText: 'ClearText'
+      Input: 'QWERTYuiop'
 
 Outputs: 
   CustomResourceValue: 
     Value: 
       Fn::GetAtt: 
         - CustomResource
-        - CipherText
+        - Output
