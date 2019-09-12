@@ -4,7 +4,12 @@ Description: AWS CloudFormation template that creates a Lambda backed Custom Res
 Parameters:
   BucketName:
     Type: String
-    Description: Enter name of S3 bucket where Lambda file is uploaded.
+    Description: Enter name of S3 bucket where Lambda jar file is uploaded.
+
+Mappings:
+  Constants:
+    InstanceValues:
+      ArtifactName: custom-resource-0.0.3-SNAPSHOT.jar
 
 Resources:
   LambdaExecutionPolicy:
@@ -48,8 +53,12 @@ Resources:
       Handler: com.sample.aws.custom_resource.lambda.CustomResourceLambda
       Code:
         S3Bucket: !Ref BucketName
-        S3Key: custom-resource-0.0.2-SNAPSHOT.jar
+        S3Key: !FindInMap 
+          - Constants
+          - InstanceValues
+          - ArtifactName
       Runtime: java8
+      Timeout: 60
 
   CustomResource:
     Type: AWS::CloudFormation::CustomResource

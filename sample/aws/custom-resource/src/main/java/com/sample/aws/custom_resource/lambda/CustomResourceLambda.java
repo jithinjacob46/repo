@@ -5,6 +5,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.json.JSONObject;
 
@@ -21,32 +27,60 @@ public class CustomResourceLambda implements RequestHandler<Map<String, Object>,
 
 		final String requestType = (String) input.get("RequestType");
 
+		ExecutorService service = Executors.newSingleThreadExecutor();
 		final JSONObject responseData = new JSONObject();
-		if (requestType == null) {
-			throw new RuntimeException();
-		}
+		try {
+			if (requestType == null) {
+				throw new RuntimeException();
+			}
 
-		if (requestType.equalsIgnoreCase("Create")) {
-			logger.log("CREATE!");
-			// Put your custom create logic here
-			responseData.put("CipherText", "CipherText");
-			responseData.put("Message", "Resource creation successful!");
-			sendResponse(input, context, "SUCCESS", responseData);
-		} else if (requestType.equalsIgnoreCase("Update")) {
-			logger.log("UDPATE!");
-			// Put your custom update logic here
-			responseData.put("CipherText", "CipherText");
-			responseData.put("Message", "Resource update successful!");
-			sendResponse(input, context, "SUCCESS", responseData);
-		} else if (requestType.equalsIgnoreCase("Delete")) {
-			logger.log("DELETE!");
-			// Put your custom delete logic here
-			responseData.put("CipherText", "CipherText");
-			responseData.put("Message", "Resource deletion successful!");
-			sendResponse(input, context, "SUCCESS", responseData);
-		} else {
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(10000);
+					} catch (final InterruptedException e) {
+						// empty block
+					}
+
+					final Map<String, Object> resourceProperties = (Map<String, Object>) input
+							.get("ResourceProperties");
+					String clearText = (String) resourceProperties.get("ClearText");
+					logger.log("clearText " + clearText);
+
+					if (requestType.equalsIgnoreCase("Create")) {
+						logger.log("CREATE!");
+						// Put your custom create logic here
+						responseData.put("CipherText", "CipherText");
+						responseData.put("Message", "Resource creation successful!");
+						sendResponse(input, context, "SUCCESS", responseData);
+					} else if (requestType.equalsIgnoreCase("Update")) {
+						logger.log("UDPATE!");
+						// Put your custom update logic here
+						responseData.put("CipherText", "CipherText");
+						responseData.put("Message", "Resource update successful!");
+						sendResponse(input, context, "SUCCESS", responseData);
+					} else if (requestType.equalsIgnoreCase("Delete")) {
+						logger.log("DELETE!");
+						// Put your custom delete logic here
+						responseData.put("CipherText", "CipherText");
+						responseData.put("Message", "Resource deletion successful!");
+						sendResponse(input, context, "SUCCESS", responseData);
+					} else {
+						logger.log("FAILURE!");
+						sendResponse(input, context, "FAILURE", responseData);
+					}
+				}
+			};
+			Future<?> f = service.submit(r);
+			f.get(context.getRemainingTimeInMillis() - 1000, TimeUnit.MILLISECONDS);
+		} catch (final TimeoutException | InterruptedException | ExecutionException e) {
 			logger.log("FAILURE!");
+			logger.log(e.toString() + " \n" + e.getMessage());
 			sendResponse(input, context, "FAILURE", responseData);
+			// Took too long!
+		} finally {
+			service.shutdown();
 		}
 		return null;
 	}
