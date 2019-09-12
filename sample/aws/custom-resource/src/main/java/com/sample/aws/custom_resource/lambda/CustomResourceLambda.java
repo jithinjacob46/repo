@@ -47,11 +47,12 @@ public class CustomResourceLambda implements RequestHandler<Map<String, Object>,
 					final Map<String, Object> resourceProperties = (Map<String, Object>) input
 							.get("ResourceProperties");
 					String inputText = (String) resourceProperties.get("Input");
-					logger.log("Input " + inputText);
+					logger.log("Input => " + inputText);
 
 					String outputText = inputText != null
 							? inputText.chars().mapToObj(e -> switchCase(e)).collect(Collectors.joining())
 							: null;
+					logger.log("Output => " + outputText);
 					String message = null;
 					String status = "FAILURE";
 					if (requestType.equalsIgnoreCase("Create")) {
@@ -98,7 +99,7 @@ public class CustomResourceLambda implements RequestHandler<Map<String, Object>,
 			f.get(context.getRemainingTimeInMillis() - 1000, TimeUnit.MILLISECONDS);
 		} catch (final TimeoutException | InterruptedException | ExecutionException e) {
 			logger.log("FAILURE!");
-			logger.log(e.toString() + " \n" + e.getMessage());
+			responseData.put("Message", e.toString() + " - " + e.getMessage());
 			sendResponse(input, context, "FAILURE", responseData);
 			// Took too long!
 		} finally {

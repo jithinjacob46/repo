@@ -13,7 +13,8 @@ Parameters:
 Mappings:
   Constants:
     InstanceValues:
-      ArtifactName: custom-resource-0.0.6-SNAPSHOT.jar
+      ArtifactName: custom-resource-0.0.7-SNAPSHOT.jar
+      LogRetentionPeriod: 7
 
 Resources:
   LambdaExecutionPolicy:
@@ -71,7 +72,7 @@ Resources:
     Type: 'AWS::Logs::LogGroup'
     Properties:
       LogGroupName: !Sub "/aws/lambda/${CustomResourceLambda}"
-      RetentionInDays: 7
+      RetentionInDays: !FindInMap [Constants, InstanceValues, LogRetentionPeriod]
 
   CustomResource:
     Type: AWS::CloudFormation::CustomResource
