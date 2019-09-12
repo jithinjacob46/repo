@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS CloudFormation template that creates a Lambda backed Custom Resource
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: Enter name of S3 bucket where Lambda file is uploaded.
+
+Resources:
+  LambdaExecutionPolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
+    Properties:
+      Description: Policy for executing lambda function
+      Path: /
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 's3:GetObject'
+              - 's3:PutObject'
+            Resource: 'arn:aws:s3:::*'
+          - Effect: Allow
+            Action:
+              - 'logs:*'
+            Resource: 'arn:aws:logs:*:*:*'
+
+  LambdaExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - !Ref LambdaExecutionPolicy
+
+  CustomResourceLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Handler: com.sample.aws.custom_resource.lambda.CustomResourceLambda
+      Code:
+        S3Bucket: !Ref BucketName
+        S3Key: custom-resource-0.0.2-SNAPSHOT.jar
+      Runtime: java8
+
+  CustomResource:
+    Type: AWS::CloudFormation::CustomResource
+    Version: '1.0'
+    Properties:
+      ServiceToken: !GetAtt 
+        - CustomResourceLambda
+        - Arn
+      ClearText: 'ClearText'
+
+Outputs: 
+  CustomResourceValue: 
+    Value: 
+      Fn::GetAtt: 
+        - CustomResource
+        - CipherText
