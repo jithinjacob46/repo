@@ -13,7 +13,7 @@ Parameters:
 Mappings:
   Constants:
     InstanceValues:
-      ArtifactName: custom-resource-0.0.5-SNAPSHOT.jar
+      ArtifactName: custom-resource-0.0.6-SNAPSHOT.jar
 
 Resources:
   LambdaExecutionPolicy:
@@ -66,6 +66,12 @@ Resources:
           env: dev
       Runtime: java8
       Timeout: 60
+
+  CustomResourceLambdaLogGroup:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${CustomResourceLambda}"
+      RetentionInDays: 7
 
   CustomResource:
     Type: AWS::CloudFormation::CustomResource

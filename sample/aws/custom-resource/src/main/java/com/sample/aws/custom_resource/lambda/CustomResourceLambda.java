@@ -49,26 +49,35 @@ public class CustomResourceLambda implements RequestHandler<Map<String, Object>,
 					String inputText = (String) resourceProperties.get("Input");
 					logger.log("Input " + inputText);
 
-					String outputText = inputText.chars().mapToObj(e -> switchCase(e)).collect(Collectors.joining());
+					String outputText = inputText != null
+							? inputText.chars().mapToObj(e -> switchCase(e)).collect(Collectors.joining())
+							: null;
+					String message = null;
+					String status = "FAILURE";
 					if (requestType.equalsIgnoreCase("Create")) {
 						logger.log("CREATE!");
 						// Put your custom create logic here
-						responseData.put("Output", outputText);
-						responseData.put("Message", "Resource creation successful!");
-						sendResponse(input, context, "SUCCESS", responseData);
+						message = "Resource creation successful!";
+						status = "SUCCESS";
 					} else if (requestType.equalsIgnoreCase("Update")) {
 						logger.log("UDPATE!");
 						// Put your custom update logic here
-						responseData.put("Output", outputText);
-						responseData.put("Message", "Resource update successful!");
-						sendResponse(input, context, "SUCCESS", responseData);
+						message = "Resource update successful!";
+						status = "SUCCESS";
 					} else if (requestType.equalsIgnoreCase("Delete")) {
 						logger.log("DELETE!");
-						sendResponse(input, context, "SUCCESS", responseData);
+						// Put your custom delete logic here
+						// message = "Resource deletion successful!";
+						status = "SUCCESS";
 					} else {
 						logger.log("FAILURE!");
-						sendResponse(input, context, "FAILURE", responseData);
 					}
+
+					if (message != null) {
+						responseData.put("Output", outputText);
+						responseData.put("Message", message);
+					}
+					sendResponse(input, context, status, responseData);
 				}
 
 				/**
