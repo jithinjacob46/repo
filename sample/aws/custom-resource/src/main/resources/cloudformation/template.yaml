@@ -13,7 +13,7 @@ Parameters:
 Mappings:
   Constants:
     InstanceValues:
-      ArtifactName: custom-resource-0.0.7-SNAPSHOT.jar
+      ArtifactName: custom-resource.zip
       LogRetentionPeriod: 7
 
 Resources:
@@ -55,7 +55,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Role: !GetAtt LambdaExecutionRole.Arn
-      Handler: com.sample.aws.custom_resource.lambda.CustomResourceLambda
+      Handler: index.handler
       Code:
         S3Bucket: !Ref BucketName
         S3Key: !FindInMap 
@@ -65,7 +65,7 @@ Resources:
       Environment:
         Variables:
           env: dev
-      Runtime: java8
+      Runtime: python2.7
       Timeout: 60
 
   CustomResourceLambdaLogGroup:
