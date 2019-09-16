@@ -1,6 +1,13 @@
+#Step 1 - Create a bucket in the same region as stack
 aws s3 mb s3://<bucketname> --region <region>
+
+#Step 2 - Build your application
 cd aws-sam
 mvn package shade:shade
 sam build --template template.yml
+
+#Step 3 - Package your application
 sam package --output-template packaged.yaml --s3-bucket <bucketname>
+
+#Step 4 - Deploy your application
 sam deploy --template-file packaged.yaml --region <region> --capabilities CAPABILITY_IAM --stack-name <stackname>

@@ -5,6 +5,11 @@ Resources:
   HelloWorld:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: ./
       Handler: com.sample.aws.aws_sam.function.HelloWorld
       Runtime: java8
-      CodeUri: ./
+
+Outputs:
+  HelloWorldFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt HelloWorld.Arn
