@@ -1,4 +1,6 @@
 {
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Transform" : "AWS::Serverless-2016-10-31",
   "Description": "A simple Lambda function saying \"Hello World\".",
   "Resources": {
     "HelloWorld": {
@@ -6,7 +8,7 @@
       "Properties": {
         "Handler": "com.sample.aws.aws_sam.function.HelloWorld",
         "Runtime" : "java8",
-        "CodeUri" : "./target/aws-sam-1.0.0.jar"
+        "CodeUri" : "./"
       }
     }
   }

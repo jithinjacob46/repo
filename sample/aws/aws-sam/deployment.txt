@@ -1,0 +1,6 @@
+aws s3api create-bucket --bucket <bucketname> --region <region>
+cd aws-sam
+mvn package shade:shade
+sam build --template serverless.template
+sam package --output-template packaged.yaml --s3-bucket <bucketname>
+sam deploy --template-file packaged.yaml --region <region> --capabilities CAPABILITY_IAM --stack-name aws-sam-stack
