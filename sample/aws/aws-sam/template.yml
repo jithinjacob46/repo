@@ -6,6 +6,12 @@ Globals:
   Function:
     Timeout: 3
 
+Parameters:
+  LogRetentionPeriod:
+    Description: The number of days for which logs need to be retained
+    Type: Number
+    Default: 7
+
 Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
@@ -23,7 +29,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${HelloWorldFunction}"
-      RetentionInDays: 7
+      RetentionInDays: !Ref LogRetentionPeriod
 
 Outputs:
   HelloWorldApi:

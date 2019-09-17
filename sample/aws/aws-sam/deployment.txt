@@ -11,4 +11,4 @@ sam build
 sam package --output-template packaged.yaml --s3-bucket <bucketname>
 
 #Step 4 - Deploy your application
-sam deploy --template-file packaged.yaml --region <region> --capabilities CAPABILITY_IAM --stack-name <stackname>
+sam deploy --template-file packaged.yaml --region <region> --capabilities CAPABILITY_IAM --stack-name <stackname> --parameter-overrides <Key1>=<Value1> <Key2>=<Value2>
