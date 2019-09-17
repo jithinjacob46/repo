@@ -10,6 +10,7 @@ Parameters:
   LogRetentionPeriod:
     Description: The number of days for which logs need to be retained
     Type: Number
+    Default: 7
     AllowedValues: [1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365]
 
 Resources:
@@ -25,11 +26,42 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: AllAtOnce
+        Hooks:
+         PreTraffic: !Ref PreTrafficLambdaFunction
   HelloWorldFunctionLogs:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub "/aws/lambda/${HelloWorldFunction}"
       RetentionInDays: !Ref LogRetentionPeriod
+  PreTrafficLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: preTrafficHook.handler
+      CodeUri: src/main/python/
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+              - "codedeploy:PutLifecycleEventHookExecutionStatus"
+            Resource:
+              !Sub 'arn:${AWS::Partition}:codedeploy:${AWS::Region}:${AWS::AccountId}:deploymentgroup:${ServerlessDeploymentApplication}/*'
+        - Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+              - "lambda:InvokeFunction"
+            Resource: !GetAtt HelloWorldFunction.Arn
+      Runtime: python3.7
+      FunctionName: 'CodeDeployHook_preTrafficHook'
+      DeploymentPreference:
+        Enabled: false
+      Environment:
+        Variables:
+          CurrentVersion: !Ref HelloWorldFunction.Version
 
 Outputs:
   HelloWorldApi:
