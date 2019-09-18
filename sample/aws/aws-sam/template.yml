@@ -30,7 +30,9 @@ Resources:
       DeploymentPreference:
         Type: AllAtOnce
         Hooks:
+         # Validation Lambda functions that are run before & after traffic shifting
          PreTraffic: !Ref PreTrafficLambdaFunction
+         PostTraffic: !Ref PostTrafficLambdaFunction
   HelloWorldFunctionLogs:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -57,6 +59,32 @@ Resources:
             Resource: !GetAtt HelloWorldFunction.Arn
       Runtime: python3.7
       FunctionName: 'CodeDeployHook_preTrafficHook'
+      DeploymentPreference:
+        Enabled: false
+      Environment:
+        Variables:
+          CurrentVersion: !Ref HelloWorldFunction.Version
+  PostTrafficLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: postTrafficHook.handler
+      CodeUri: src/main/python/
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+              - "codedeploy:PutLifecycleEventHookExecutionStatus"
+            Resource:
+              !Sub 'arn:${AWS::Partition}:codedeploy:${AWS::Region}:${AWS::AccountId}:deploymentgroup:${ServerlessDeploymentApplication}/*'
+        - Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+              - "lambda:InvokeFunction"
+            Resource: !GetAtt HelloWorldFunction.Arn
+      Runtime: python3.7
+      FunctionName: 'CodeDeployHook_postTrafficHook'
       DeploymentPreference:
         Enabled: false
       Environment:

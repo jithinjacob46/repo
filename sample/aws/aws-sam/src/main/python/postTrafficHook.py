@@ -4,7 +4,7 @@ import boto3
 client = boto3.client('codedeploy')
 def handler(event, context):
 
-    print("Entering PreTraffic Hook!")
+    print("Entering PostTraffic Hook!")
     print(json.dumps(event))
     
     # Read the DeploymentId from the event payload.
