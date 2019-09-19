@@ -26,21 +26,24 @@ def lambda_handler(event, context):
     """
 
     print(event)
+    queryStringParameters = event['queryStringParameters']
+    if queryStringParameters is not None:
+        content = queryStringParameters.get('name')
+    else:
+        content = 'World'
+    print(content)
 
     try:
         ip = requests.get("http://checkip.amazonaws.com/")
-        content = ip.text.replace("\n", "")
-        print(content)
+        print(ip.text.replace("\n", ""))
     except requests.RequestException as e:
         # Send some context about this error to Lambda Logs
         print(e)
-
         raise e
 
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "message": "hello world",
-            "location": content
+            "message": "Hello " + content
         })
     }
