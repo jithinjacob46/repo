@@ -4,7 +4,8 @@ Description: A simple Lambda function saying "Hello World".
 
 Globals:
   Function:
-    Timeout: 3
+    Runtime: python3.7
+    Timeout: 5
 
 Parameters:
   LogRetentionPeriod:
@@ -19,7 +20,6 @@ Resources:
     Properties:
       CodeUri: src/main/python/
       Handler: app.lambda_handler
-      Runtime: python3.7
       Events:
         HelloWorld:
           Type: Api
@@ -56,11 +56,9 @@ Resources:
             Action:
               - "lambda:InvokeFunction"
             Resource: !GetAtt HelloWorldFunction.Arn
-      Runtime: python3.7
       FunctionName: 'CodeDeployHook_preTrafficHook'
       DeploymentPreference:
         Enabled: false
-      Timeout: 5
       Environment:
         Variables:
           CurrentVersion: !Ref HelloWorldFunction.Version
@@ -83,11 +81,9 @@ Resources:
             Action:
               - "lambda:InvokeFunction"
             Resource: !GetAtt HelloWorldFunction.Arn
-      Runtime: python3.7
       FunctionName: 'CodeDeployHook_postTrafficHook'
       DeploymentPreference:
         Enabled: false
-      Timeout: 5
       Environment:
         Variables:
           CurrentVersion: !Ref HelloWorldFunction.Version
