@@ -17,9 +17,9 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./
-      Handler: com.sample.aws.aws_sam.function.HelloWorld
-      Runtime: java8
+      CodeUri: src/main/python/
+      Handler: app.lambda_handler
+      Runtime: python3.7
       Events:
         HelloWorld:
           Type: Api
@@ -30,7 +30,6 @@ Resources:
       DeploymentPreference:
         Type: AllAtOnce
         Hooks:
-         # Validation Lambda functions that are run before & after traffic shifting
          PreTraffic: !Ref PreTrafficLambdaFunction
          PostTraffic: !Ref PostTrafficLambdaFunction
   HelloWorldFunctionLogs:
@@ -61,6 +60,7 @@ Resources:
       FunctionName: 'CodeDeployHook_preTrafficHook'
       DeploymentPreference:
         Enabled: false
+      Timeout: 5
       Environment:
         Variables:
           CurrentVersion: !Ref HelloWorldFunction.Version
@@ -87,6 +87,7 @@ Resources:
       FunctionName: 'CodeDeployHook_postTrafficHook'
       DeploymentPreference:
         Enabled: false
+      Timeout: 5
       Environment:
         Variables:
           CurrentVersion: !Ref HelloWorldFunction.Version
