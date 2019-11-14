@@ -5,7 +5,6 @@ package com.problem.parking;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -32,7 +31,7 @@ public class ParkingLot<T extends Vehicle> {
 		String park = null;
 		int slot = this.parkVehicle(vehicle);
 		if (slot > 0) {
-			park = "Allocated slot number: " + slot;
+			park = "Allocated slot number: " + slot + " to vehicle " + vehicle.getRegistrationNumber();
 		} else {
 			park = "Sorry, parking lot is full";
 		}
@@ -54,7 +53,7 @@ public class ParkingLot<T extends Vehicle> {
 		String leave = null;
 		T vehicle = this.leaveVehicle(slot - 1);
 		if (vehicle != null) {
-			leave = "Slot number " + slot + " is free";
+			leave = "Vehicle " + vehicle.getRegistrationNumber() + " left slot number " + slot;
 		}
 		System.out.println(leave);
 		return leave;
@@ -75,7 +74,7 @@ public class ParkingLot<T extends Vehicle> {
 		int slot = findSlotVehicle(vehicle);
 		String parkingSlot;
 		if (slot > 0) {
-			parkingSlot = "" + slot;
+			parkingSlot = "Slot number: " + slot;
 		} else {
 			parkingSlot = "Not found";
 		}
@@ -93,7 +92,13 @@ public class ParkingLot<T extends Vehicle> {
 
 		List<T> vehicles = statusVehicle();
 		StringBuilder stringBuilder = new StringBuilder("Registration No \n");
-		vehicles.stream().forEach(vehicle -> stringBuilder.append(vehicle.getRegistrationNumber() + "\n"));
+		vehicles.stream().forEach(vehicle -> {
+			if (vehicle != null) {
+				stringBuilder.append(vehicle.getRegistrationNumber() + "\n");
+			} else {
+				stringBuilder.append("\n");
+			}
+		});
 		String status = stringBuilder.toString();
 		System.out.println(status);
 		return status;
@@ -101,8 +106,7 @@ public class ParkingLot<T extends Vehicle> {
 
 	protected List<T> statusVehicle() {
 
-		List<T> vehicles = slots.stream().filter(vehicle -> vehicle != null).collect(Collectors.toList());
-		return vehicles;
+		return slots;
 	}
 
 }
