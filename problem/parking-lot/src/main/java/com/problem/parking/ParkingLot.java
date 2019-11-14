@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
  */
 public class ParkingLot<T extends Vehicle> {
 
-	private int capacity;
+	protected int capacity;
 	private List<T> slots;
 
 	public ParkingLot(int capacity) {
@@ -91,10 +91,11 @@ public class ParkingLot<T extends Vehicle> {
 	public String status() {
 
 		List<T> vehicles = statusVehicle();
-		StringBuilder stringBuilder = new StringBuilder("Registration No \n");
-		vehicles.stream().forEach(vehicle -> {
+		StringBuilder stringBuilder = new StringBuilder("Slot No. Registration No \n");
+		IntStream.range(0, capacity).forEach(index -> {
+			T vehicle = vehicles.get(index);
 			if (vehicle != null) {
-				stringBuilder.append(vehicle.getRegistrationNumber() + "\n");
+				stringBuilder.append((index + 1) + "\t" + vehicle.getRegistrationNumber() + "\n");
 			} else {
 				stringBuilder.append("\n");
 			}

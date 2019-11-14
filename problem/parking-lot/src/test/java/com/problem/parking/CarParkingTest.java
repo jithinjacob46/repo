@@ -14,7 +14,7 @@ public class CarParkingTest {
 	@Test
 	public void test() {
 
-		ParkingLot<Car> parkingLot = new ParkingLot<>(6);
+		ParkingLot<Car> parkingLot = new CarParkingLot(6);
 		parkingLot.park(new Car("KA-01-HH-1234", "White"));
 		parkingLot.park(new Car("KA-01-HH-9999", "White"));
 		parkingLot.park(new Car("KA-01-BB-0001", "Black"));
