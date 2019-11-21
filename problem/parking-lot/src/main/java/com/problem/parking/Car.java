@@ -32,4 +32,14 @@ public class Car extends Vehicle {
 		this.color = color;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Car [color=" + color + "]";
+	}
+
 }

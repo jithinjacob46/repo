@@ -92,24 +92,26 @@ public class ParkingLot<T extends Vehicle> {
 
 	public String status() {
 
-		List<T> vehicles = statusVehicle();
+		List<String> vehicles = statusVehicle();
 		StringBuilder stringBuilder = new StringBuilder("Slot No. Registration No \n");
-		IntStream.range(0, capacity).forEach(index -> {
-			T vehicle = vehicles.get(index);
-			if (vehicle != null) {
-				stringBuilder.append((index + 1) + "\t" + vehicle.getRegistrationNumber() + "\n");
-			} else {
-				stringBuilder.append("\n");
-			}
-		});
+		vehicles.stream().forEach(vehicle -> stringBuilder.append(vehicle));
 		String status = stringBuilder.toString();
 		System.out.println(status);
 		return status;
 	}
 
-	protected List<T> statusVehicle() {
+	protected List<String> statusVehicle() {
 
-		return slots;
+		List<String> vehicles = new ArrayList<>();
+		IntStream.range(0, capacity).forEach(index -> {
+			T vehicle = slots.get(index);
+			if (vehicle != null) {
+				vehicles.add((index + 1) + "\t" + vehicle.getRegistrationNumber() + "\n");
+			} else {
+				vehicles.add("\n");
+			}
+		});
+		return vehicles;
 	}
 
 }

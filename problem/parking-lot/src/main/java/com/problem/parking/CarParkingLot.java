@@ -22,7 +22,7 @@ public class CarParkingLot extends ParkingLot<Car> {
 
 	public String findSlots(String color) {
 
-		List<Car> cars = statusVehicle();
+		List<Car> cars = slots;
 		List<String> slots = IntStream.range(0, capacity)
 				.filter(index -> cars.get(index) != null && color.equals(cars.get(index).getColor()))
 				.mapToObj(index -> String.valueOf(index + 1)).collect(Collectors.toList());
@@ -32,7 +32,7 @@ public class CarParkingLot extends ParkingLot<Car> {
 
 	public String findRegistrationNumbers(String color) {
 
-		List<Car> cars = statusVehicle();
+		List<Car> cars = slots;
 		List<String> registrationNumbers = cars.stream().filter(car -> car != null && color.equals(car.getColor()))
 				.map(Car::getRegistrationNumber).collect(Collectors.toList());
 		System.out.println(registrationNumbers.toString());
@@ -47,16 +47,9 @@ public class CarParkingLot extends ParkingLot<Car> {
 	@Override
 	public String status() {
 
-		List<Car> vehicles = slots;
+		List<String> vehicles = statusVehicle();
 		StringBuilder stringBuilder = new StringBuilder("Slot No. Registration No Color \n");
-		IntStream.range(0, capacity).forEach(index -> {
-			Car car = vehicles.get(index);
-			if (car != null) {
-				stringBuilder.append((index + 1) + "\t" + car.getRegistrationNumber() + "\t" + car.getColor() + "\n");
-			} else {
-				stringBuilder.append("\n");
-			}
-		});
+		vehicles.stream().forEach(vehicle -> stringBuilder.append(vehicle));
 		String status = stringBuilder.toString();
 		System.out.println(status);
 		return status;
