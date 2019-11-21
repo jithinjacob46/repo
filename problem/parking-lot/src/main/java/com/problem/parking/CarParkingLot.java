@@ -4,6 +4,7 @@
 package com.problem.parking;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -21,25 +22,44 @@ public class CarParkingLot extends ParkingLot<Car> {
 
 	public String findSlots(String color) {
 
-		StringBuilder stringBuilder = new StringBuilder("");
 		List<Car> cars = statusVehicle();
-		IntStream.range(0, capacity)
+		List<String> slots = IntStream.range(0, capacity)
 				.filter(index -> cars.get(index) != null && color.equals(cars.get(index).getColor()))
-				.forEach(index -> stringBuilder.append(index + 1).append(","));
-		String slots = stringBuilder.toString();
-		System.out.println(slots);
-		return slots;
+				.mapToObj(index -> String.valueOf(index + 1)).collect(Collectors.toList());
+		System.out.println(slots.toString());
+		return slots.toString();
 	}
 
 	public String findRegistrationNumbers(String color) {
 
-		StringBuilder stringBuilder = new StringBuilder("");
 		List<Car> cars = statusVehicle();
-		cars.stream().filter(car -> car != null && color.equals(car.getColor()))
-				.forEach(car -> stringBuilder.append(car.getRegistrationNumber()).append(","));
-		String registrationNumbers = stringBuilder.toString();
-		System.out.println(registrationNumbers);
-		return registrationNumbers;
+		List<String> registrationNumbers = cars.stream().filter(car -> car != null && color.equals(car.getColor()))
+				.map(Car::getRegistrationNumber).collect(Collectors.toList());
+		System.out.println(registrationNumbers.toString());
+		return registrationNumbers.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.problem.parking.ParkingLot#status()
+	 */
+	@Override
+	public String status() {
+
+		List<Car> vehicles = slots;
+		StringBuilder stringBuilder = new StringBuilder("Slot No. Registration No Color \n");
+		IntStream.range(0, capacity).forEach(index -> {
+			Car car = vehicles.get(index);
+			if (car != null) {
+				stringBuilder.append((index + 1) + "\t" + car.getRegistrationNumber() + "\t" + car.getColor() + "\n");
+			} else {
+				stringBuilder.append("\n");
+			}
+		});
+		String status = stringBuilder.toString();
+		System.out.println(status);
+		return status;
 	}
 
 }

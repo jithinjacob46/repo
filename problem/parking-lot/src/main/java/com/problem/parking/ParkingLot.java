@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class ParkingLot<T extends Vehicle> {
 
 	protected int capacity;
-	private List<T> slots;
+	protected List<T> slots;
 
 	public ParkingLot(int capacity) {
 
@@ -84,7 +84,9 @@ public class ParkingLot<T extends Vehicle> {
 
 	protected int findSlotVehicle(T vehicle) {
 
-		int slot = slots.indexOf(vehicle);
+		String registrationNumber = vehicle.getRegistrationNumber();
+		int slot = IntStream.range(0, capacity).filter(index -> slots.get(index) != null
+				&& slots.get(index).getRegistrationNumber().equals(registrationNumber)).findFirst().orElse(-1);
 		return slot + 1;
 	}
 
