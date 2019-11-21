@@ -9,7 +9,7 @@ package com.problem.parking;
  */
 public class Vehicle {
 
-	private String registrationNumber;
+	protected String registrationNumber;
 
 	public Vehicle(String registrationNumber) {
 
@@ -65,6 +65,16 @@ public class Vehicle {
 		} else if (!registrationNumber.equals(other.registrationNumber))
 			return false;
 		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Vehicle [registrationNumber=" + registrationNumber + "]";
 	}
 
 }

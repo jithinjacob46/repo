@@ -39,20 +39,4 @@ public class CarParkingLot extends ParkingLot<Car> {
 		return registrationNumbers.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.problem.parking.ParkingLot#status()
-	 */
-	@Override
-	public String status() {
-
-		List<String> vehicles = statusVehicle();
-		StringBuilder stringBuilder = new StringBuilder("Slot No. Registration No Color \n");
-		vehicles.stream().forEach(vehicle -> stringBuilder.append(vehicle));
-		String status = stringBuilder.toString();
-		System.out.println(status);
-		return status;
-	}
-
 }

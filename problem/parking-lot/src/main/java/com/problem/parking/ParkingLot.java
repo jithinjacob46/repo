@@ -106,7 +106,7 @@ public class ParkingLot<T extends Vehicle> {
 		IntStream.range(0, capacity).forEach(index -> {
 			T vehicle = slots.get(index);
 			if (vehicle != null) {
-				vehicles.add((index + 1) + "\t" + vehicle.getRegistrationNumber() + "\n");
+				vehicles.add((index + 1) + "\t" + vehicle.toString() + "\n");
 			} else {
 				vehicles.add("\n");
 			}

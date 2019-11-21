@@ -39,7 +39,7 @@ public class Car extends Vehicle {
 	 */
 	@Override
 	public String toString() {
-		return "Car [color=" + color + "]";
+		return registrationNumber + "\t" + color;
 	}
 
 }
