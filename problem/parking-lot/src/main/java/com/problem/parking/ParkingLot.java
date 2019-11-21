@@ -24,6 +24,7 @@ public class ParkingLot<T extends Vehicle> {
 		for (int i = 0; i < capacity; i++) {
 			slots.add(null);
 		}
+		System.out.println("Created a parking lot with " + capacity + " slots");
 	}
 
 	public String park(T vehicle) {
@@ -31,7 +32,9 @@ public class ParkingLot<T extends Vehicle> {
 		String park = null;
 		int slot = this.parkVehicle(vehicle);
 		if (slot > 0) {
-			park = "Allocated slot number: " + slot + " to vehicle " + vehicle.getRegistrationNumber();
+			// park = "Allocated slot number: " + slot + " to vehicle " +
+			// vehicle.getRegistrationNumber();
+			park = "Allocated slot number: " + slot;
 		} else {
 			park = "Sorry, parking lot is full";
 		}
@@ -53,7 +56,9 @@ public class ParkingLot<T extends Vehicle> {
 		String leave = null;
 		T vehicle = this.leaveVehicle(slot - 1);
 		if (vehicle != null) {
-			leave = "Vehicle " + vehicle.getRegistrationNumber() + " left slot number " + slot;
+			// leave = "Vehicle " + vehicle.getRegistrationNumber() + " left slot number " +
+			// slot;
+			leave = "Slot number " + slot + " is free";
 		}
 		System.out.println(leave);
 		return leave;
@@ -74,7 +79,8 @@ public class ParkingLot<T extends Vehicle> {
 		int slot = findSlotVehicle(vehicle);
 		String parkingSlot;
 		if (slot > 0) {
-			parkingSlot = "Slot number: " + slot;
+			// parkingSlot = "Slot number: " + slot;
+			parkingSlot = String.valueOf(slot);
 		} else {
 			parkingSlot = "Not found";
 		}
