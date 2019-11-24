@@ -23,7 +23,7 @@ public class SequencePrinter {
 		List<Thread> threads = new ArrayList<>();
 		for (int i = 0; i < NO_OF_THREADS; i++) {
 			SequenceThread sequenceThread = new SequenceThread(i, NO_OF_THREADS);
-			threads.add(new Thread(sequenceThread));
+			threads.add(new Thread(sequenceThread, "Thread" + (i + 1)));
 		}
 
 		for (int i = 0; i < NO_OF_THREADS; i++) {
@@ -55,7 +55,6 @@ public class SequencePrinter {
 		 */
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 
 			try {
 				while (true) {
@@ -65,14 +64,13 @@ public class SequencePrinter {
 						if (count % dividend != remainder) {
 							mutex.wait();
 						} else {
-							System.out.println("Printed " + count + " in thread " + " in thread" + (remainder + 1));
+							System.out.println("Printed " + count + " in thread " + Thread.currentThread().getName());
 							count++;
 							mutex.notifyAll();
 						}
 					}
 				}
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
