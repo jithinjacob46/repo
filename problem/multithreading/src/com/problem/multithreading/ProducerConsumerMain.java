@@ -11,22 +11,24 @@ public class ProducerConsumerMain {
 
 	/**
 	 * @param args
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		// TODO Auto-generated method stub
 
 		int capacity = 5;
 		ProducerConsumer producerConsumer = new ProducerConsumer(capacity);
 		Thread t1 = new Thread(new Runnable() {
 
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.lang.Runnable#run()
+			 */
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				try {
 					producerConsumer.produce();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -34,21 +36,24 @@ public class ProducerConsumerMain {
 
 		Thread t2 = new Thread(new Runnable() {
 
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see java.lang.Runnable#run()
+			 */
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				try {
 					producerConsumer.consume();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		
+
 		t1.start();
 		t2.start();
-		
+
 		t1.join();
 		t2.join();
 	}

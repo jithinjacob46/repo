@@ -27,7 +27,6 @@ public class ProducerConsumer {
 	 * 
 	 */
 	public void produce() throws InterruptedException {
-		// TODO Auto-generated method stub
 
 		int value = 0;
 		while (true) {
@@ -49,11 +48,10 @@ public class ProducerConsumer {
 	}
 
 	/**
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 * 
 	 */
 	public void consume() throws InterruptedException {
-		// TODO Auto-generated method stub
 
 		while (true) {
 
@@ -62,12 +60,12 @@ public class ProducerConsumer {
 				while (list.size() == 0) {
 					wait();
 				}
-				
+
 				int value = list.remove(0);
 				System.out.println("Consumed value " + value);
-				
+
 				notify();
-				
+
 				Thread.sleep(1000);
 			}
 
