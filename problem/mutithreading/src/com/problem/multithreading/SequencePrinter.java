@@ -5,6 +5,7 @@ package com.problem.multithreading;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author jacob
@@ -18,12 +19,12 @@ public class SequencePrinter {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		final int NO_OF_THREADS = 4;
+		final int NO_OF_THREADS = 5;
 
 		List<Thread> threads = new ArrayList<>();
 		for (int i = 0; i < NO_OF_THREADS; i++) {
 			SequenceThread sequenceThread = new SequenceThread(i, NO_OF_THREADS);
-			threads.add(new Thread(sequenceThread, "Thread" + (i + 1)));
+			threads.add(new Thread(sequenceThread, "Thread" + (i == 0 ? NO_OF_THREADS : i)));
 		}
 
 		for (int i = 0; i < NO_OF_THREADS; i++) {
@@ -34,7 +35,7 @@ public class SequencePrinter {
 	public static class SequenceThread implements Runnable {
 
 		private static final Object mutex = new Object();
-		private static volatile int count = 1;
+		private static AtomicInteger count = new AtomicInteger(1);
 		private int remainder;
 		private int dividend;
 
@@ -61,11 +62,11 @@ public class SequencePrinter {
 					Thread.sleep(1000);
 					synchronized (mutex) {
 
-						if (count % dividend != remainder) {
+						if (count.get() % dividend != remainder) {
 							mutex.wait();
 						} else {
-							System.out.println("Printed " + count + " in thread " + Thread.currentThread().getName());
-							count++;
+							System.out.println("Printed " + count.getAndIncrement() + " in thread "
+									+ Thread.currentThread().getName());
 							mutex.notifyAll();
 						}
 					}
